@@ -1,9 +1,11 @@
-package user;
+package service.passenger;
 
 import database.PassengerDb;
 import exceptions.UserAlreadyExistsException;
 import exceptions.UserNotFoundException;
-import service.PassengerService;
+import service.passenger.PassengerService;
+import user.Passenger;
+import user.PassengerUpdateForm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,12 +51,29 @@ public class PassengerServiceImpl implements PassengerService {
     }
 
     @Override
-    public void updatePassenger(Passenger passenger) {
+    public void updatePassenger(String id, PassengerUpdateForm form) throws UserNotFoundException {
+        Passenger passenger = findPassengerById(id);
+        if(form.firstName() != null){
+            passenger.setFirstName(form.firstName());
+        }
+        if(form.lastName() != null){
+            passenger.setLastName(form.lastName());
+        }
+        if(form.phoneNumber() != null){
+            passenger.setPhoneNumber(form.phoneNumber());
+        }
+        if(form.email() != null){
+            passenger.setEmailAddress(form.email());
+        }
+        passengerDb.save(passenger);
 
     }
 
     @Override
     public void deletePassenger(Passenger passenger) {
+        if(passengerDb.contains(passenger)){
+            passengerDb.delete(passenger);
+        }
 
     }
     public long count(){

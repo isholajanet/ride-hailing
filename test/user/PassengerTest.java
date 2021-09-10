@@ -7,7 +7,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import service.PassengerService;
+import service.passenger.PassengerServiceImpl;
 
 import java.util.List;
 
@@ -114,6 +114,7 @@ class PassengerTest {
     @DisplayName("Find Passenger By Name")
     @Test
     void testToFindPassengerByFirstNameOrLastName() throws UserNotFoundException {
+        //create users
         Passenger passenger3 = new Passenger("3", "timi", "olayemi", "timiolayemi@gmail.com","0815893031","9999");
         try {
             passengerServiceImpl.createPassenger(passenger1);
@@ -150,17 +151,43 @@ class PassengerTest {
         } catch (UserAlreadyExistsException userAlreadyExistsException) {
             System.err.printf("%s: ", userAlreadyExistsException.getLocalizedMessage());
         }
+        //update user details
 
+        PassengerUpdateForm form = new PassengerUpdateForm("yinka", null, null, null);
+        try {
+            passengerServiceImpl.updatePassenger("1", form);
+        } catch (UserNotFoundException e) {
+            e.getLocalizedMessage();
+        }
+        //Search for user with id
         Passenger foundPassenger = null;
         try {
             foundPassenger = passengerServiceImpl.findPassengerById("1");
         } catch (UserNotFoundException e) {
             System.err.printf("%s: ", e.getLocalizedMessage());
         }
-        System.out.println(foundPassenger.toString());
-        foundPassenger.setFirstName("Yinka");
-        assertEquals("Yinka", foundPassenger.getFirstName());
-        System.out.println(foundPassenger.toString());
+        assertEquals("yinka", foundPassenger.getFirstName());
+        assertEquals("ishola", foundPassenger.getLastName());
+
+    }
+
+    @DisplayName("Delete passenger")
+    @Test
+    void testThatSystemCanDeletePassenger(){
+        //register passenger
+        Passenger passenger3 = new Passenger("3", "timi", "olayemi", "timiolayemi@gmail.com","0815893031","9999");
+        try {
+            passengerServiceImpl.createPassenger(passenger1);
+            passengerServiceImpl.createPassenger(passenger2);
+            passengerServiceImpl.createPassenger(passenger3);
+        } catch (UserAlreadyExistsException userAlreadyExistsException) {
+            System.err.printf("%s: ", userAlreadyExistsException.getLocalizedMessage());
+        }
+        //Delete passenger
+            passengerServiceImpl.deletePassenger(passenger3);
+            assertEquals(2, passengerServiceImpl.count());
+
+
     }
 
 

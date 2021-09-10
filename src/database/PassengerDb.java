@@ -25,16 +25,12 @@ public class PassengerDb {
 
 
     public Passenger find(Passenger passenger) throws UserNotFoundException {
-        Passenger foundPassenger = null;
         for(Passenger p : passengerMap.values()){
             if(p.equals(passenger)){
-                foundPassenger = p;
+                return p;
             }
         }
-        if(foundPassenger == null){
             throw new UserNotFoundException("Passenger not found");
-        }
-        return foundPassenger;
     }
 
     public Passenger findById(String passengerId) throws UserNotFoundException {
@@ -48,5 +44,9 @@ public class PassengerDb {
     public List<Passenger> findAll() {
         List<Passenger> passengers = new ArrayList<>(passengerMap.values());
         return passengers;
+    }
+
+    public void delete(Passenger passenger) {
+        passengerMap.remove(passenger.getPassengerId());
     }
 }
